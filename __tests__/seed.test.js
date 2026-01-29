@@ -5,7 +5,7 @@ const data = require("../db/data/test-data/index");
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
-describe.only("We will be using this file in the very near future!", () => {
+describe("We will be using this file in the very near future!", () => {
   test("You'll love it!", () => {
     console.log(data);
   });
@@ -379,7 +379,7 @@ describe("seed", () => {
     });
   });
 
-  describe("comments table", () => {
+  describe.only("comments table", () => {
     test("comments table exists", () => {
       return db
         .query(
