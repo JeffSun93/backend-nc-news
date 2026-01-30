@@ -1,4 +1,6 @@
 const db = require("../connection");
+const format = require("../util/formatData");
+const reform = require("../util/reformData");
 
 const seed = async ({ topicData, userData, articleData, commentData }) => {
   await db.query(`
@@ -48,6 +50,50 @@ const seed = async ({ topicData, userData, articleData, commentData }) => {
       author VARCHAR REFERENCES users(username),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+  `);
+  const topicValues = format(topicData, ["slug", "description", "img_url"]);
+  await db.query(`
+    INSERT INTO topics (slug, description, img_url)
+    VALUES ${topicValues};
+  `);
+  const userValues = format(userData, ["username", "name", "avatar_url"]);
+  await db.query(`
+    INSERT INTO users (username, name, avatar_url)
+    VALUES ${userValues};
+  `);
+  const articleValues = format(articleData, [
+    "title",
+    "topic",
+    "author",
+    "body",
+    "created_at",
+    "votes",
+    "article_img_url",
+  ]);
+  const result = await db.query(`
+    INSERT INTO articles (title, topic, author, body, created_at, votes, article_img_url)
+    VALUES ${articleValues}
+    RETURNING article_id, title;
+  `);
+
+  const reformedCommentData = reform(
+    commentData,
+    result.rows,
+    "article_title",
+    "title",
+    "article_id",
+  );
+
+  const commentValues = format(reformedCommentData, [
+    "article_id",
+    "body",
+    "votes",
+    "author",
+    "created_at",
+  ]);
+  await db.query(`
+    INSERT INTO comments (article_id, body, votes, author, created_at)
+    VALUES ${commentValues};
   `);
 };
 module.exports = seed;
