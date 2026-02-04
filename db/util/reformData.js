@@ -3,9 +3,8 @@ function reformData(dataArr, rowsArr, dataKey, rowKey, newKey) {
     const dataToChange = rowsArr.find(
       (row) => row[rowKey] === dataObj[dataKey],
     );
-    delete dataObj[dataKey];
-
-    return { ...dataObj, [newKey]: dataToChange[newKey] };
+    const { [dataKey]: _, ...rest } = dataObj;
+    return { ...rest, [newKey]: dataToChange ? dataToChange[newKey] : null };
   });
 }
 module.exports = reformData;
