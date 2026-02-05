@@ -5,12 +5,6 @@ const data = require("../db/data/test-data/index");
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
-describe("We will be using this file in the very near future!", () => {
-  test("You'll love it!", () => {
-    console.log(data);
-  });
-});
-
 describe("seed", () => {
   describe("topics table", () => {
     test("topics table exists", () => {

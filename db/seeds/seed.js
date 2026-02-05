@@ -1,6 +1,6 @@
 const db = require("../connection");
-const format = require("../util/formatData");
-const reform = require("../util/reformData");
+const format = require("../utils/formatData");
+const reform = require("../utils/reformData");
 
 const seed = async ({ topicData, userData, articleData, commentData }) => {
   await db.query(`
