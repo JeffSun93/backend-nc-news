@@ -26,5 +26,7 @@ describe("Express app basic and error handle test", () => {
     });
   });
 
+  describe("Handle NotFoundError", () => {});
+
   describe("Handle internal error", () => {});
 });

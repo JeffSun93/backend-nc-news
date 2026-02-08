@@ -1,6 +1,7 @@
 const express = require("express");
-const router = express.Router();
+const { getAllTopics } = require("../controllers/topics.controllers.js");
+const topicsRouter = express.Router();
 
-router.get("/", (req, res) => res.status(200).send({ msg: "mock success" }));
+topicsRouter.get("/", getAllTopics);
 
-module.exports = router;
+module.exports = topicsRouter;
