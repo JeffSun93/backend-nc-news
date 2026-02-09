@@ -5,6 +5,8 @@ const articlesController = require("../../src/controllers/articles.controllers.j
 
 jest.mock("../../src/controllers/articles.controllers.js", () => ({
   getAllArticles: jest.fn(),
+  getArticleById: jest.fn(),
+  getCommentsByArticle: jest.fn(),
 }));
 
 describe("Articles router test", () => {
@@ -17,7 +19,7 @@ describe("Articles router test", () => {
     jest.clearAllMocks();
   });
 
-  describe("GET /api/topics", () => {
+  describe("GET /api/articles", () => {
     it("should invoke getAllArticles", async () => {
       articlesController.getAllArticles.mockImplementation((req, res) => {
         res.status(200).send({ articles: [] });

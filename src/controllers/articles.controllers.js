@@ -1,7 +1,8 @@
 const {
   fetchArticlesService,
   fetchArticleByIdService,
-  fetchCommentsByArticle,
+  fetchCommentsByArticleService,
+  addCommentByArticleService,
 } = require("../services/articles.services.js");
 
 function getAllArticles(req, res, next) {
@@ -23,11 +24,26 @@ function getArticleById(req, res, next) {
 
 function getCommentsByArticle(req, res, next) {
   const { article_id } = req.params;
-  return fetchCommentsByArticle(article_id)
+  return fetchCommentsByArticleService(article_id)
     .then((comments) => {
       res.status(200).send({ comments });
     })
     .catch(next);
 }
 
-module.exports = { getAllArticles, getArticleById, getCommentsByArticle };
+function postCommentByArticle(req, res, next) {
+  const { article_id } = req.params;
+  const { username, body } = req.body;
+  return addCommentByArticleService(article_id, username, body)
+    .then((comment) => {
+      res.status(200).send({ comment });
+    })
+    .catch(next);
+}
+
+module.exports = {
+  getAllArticles,
+  getArticleById,
+  getCommentsByArticle,
+  postCommentByArticle,
+};

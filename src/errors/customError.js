@@ -11,4 +11,10 @@ class NotFoundError extends CustomError {
   }
 }
 
-module.exports = { CustomError, NotFoundError };
+class BadRequestError extends CustomError {
+  constructor(message = "InvalidRequest!") {
+    super(message, 400);
+  }
+}
+
+module.exports = { CustomError, NotFoundError, BadRequestError };

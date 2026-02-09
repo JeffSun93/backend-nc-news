@@ -3,6 +3,7 @@ const {
   selectAllArticles,
   selectArticleById,
   selectCommentsByArticle,
+  insertCommentByArticle,
 } = require("../models/articles.models.js");
 
 function fetchArticlesService() {
@@ -19,7 +20,7 @@ function fetchArticleByIdService(article_id) {
   });
 }
 
-function fetchCommentsByArticle(article_id) {
+function fetchCommentsByArticleService(article_id) {
   return Promise.all([
     selectCommentsByArticle(article_id),
     selectArticleById(article_id),
@@ -32,8 +33,23 @@ function fetchCommentsByArticle(article_id) {
   });
 }
 
+function addCommentByArticleService(article_id, username, body) {
+  return insertCommentByArticle(article_id, username, body).catch((err) => {
+    if (err.code === "23503") {
+      if (err.detail.includes("article_id")) {
+        throw new NotFoundError("Article Not Found!");
+      }
+      if (err.detail.includes("author")) {
+        throw new NotFoundError("Author Not Found!");
+      }
+    }
+    throw err;
+  });
+}
+
 module.exports = {
   fetchArticlesService,
   fetchArticleByIdService,
-  fetchCommentsByArticle,
+  fetchCommentsByArticleService,
+  addCommentByArticleService,
 };
