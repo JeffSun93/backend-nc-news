@@ -20,7 +20,7 @@ app.use((err, request, response, next) => {
   if (err instanceof CustomError) {
     return response.status(err.status).send({ msg: err.message });
   }
-
+  console.log(err);
   response.status(500).send({ msg: "Internal Server Error" });
 });
 

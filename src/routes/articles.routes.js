@@ -1,7 +1,15 @@
 const express = require("express");
-const { getAllArticles } = require("../controllers/articles.controllers.js");
+const {
+  getAllArticles,
+  getArticleById,
+  getCommentsByArticle,
+} = require("../controllers/articles.controllers.js");
 const articlesRouter = express.Router();
 
 articlesRouter.get("/", getAllArticles);
+
+articlesRouter.get("/:article_id", getArticleById);
+
+articlesRouter.get("/:article_id/comments", getCommentsByArticle);
 
 module.exports = articlesRouter;

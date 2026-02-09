@@ -1,7 +1,7 @@
-const selectAllTopics = require("../models/topics.models.js");
+const { selectAllTopics } = require("../models/topics.models.js");
 
 function fetchTopicsService() {
-  return selectAllTopics;
+  return selectAllTopics();
 }
 
 module.exports = { fetchTopicsService };

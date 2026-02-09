@@ -14,9 +14,50 @@ function selectAllArticles() {
     FROM articles
     LEFT JOIN comments on articles.article_id = comments.article_id
     GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC`,
+    ORDER BY articles.created_at DESC;`,
     )
     .then(({ rows }) => rows);
 }
 
-module.exports = { selectAllArticles };
+function selectArticleById(article_id) {
+  return db
+    .query(
+      `SELECT author,
+       title,
+       article_id,
+       body, 
+       topic, 
+       created_at, 
+       votes, 
+       article_img_url
+       FROM articles
+       WHERE article_id = $1; 
+    `,
+      [article_id],
+    )
+    .then(({ rows }) => rows[0]);
+}
+
+function selectCommentsByArticle(article_id) {
+  return db
+    .query(
+      `SELECT comment_id,
+    votes,
+    created_at,
+    author,
+    body,
+    article_id
+    FROM comments
+    WHERE article_id = $1
+    ORDER BY created_at DESC;
+    `,
+      [article_id],
+    )
+    .then(({ rows }) => rows);
+}
+
+module.exports = {
+  selectAllArticles,
+  selectArticleById,
+  selectCommentsByArticle,
+};
