@@ -1,9 +1,10 @@
-const { NotFoundError } = require("../errors/customError.js");
+const { NotFoundError, BadRequestError } = require("../errors/customError.js");
 const {
   selectAllArticles,
   selectArticleById,
   selectCommentsByArticle,
   insertCommentByArticle,
+  updateVoteByArticle,
 } = require("../models/articles.models.js");
 
 function fetchArticlesService() {
@@ -47,9 +48,33 @@ function addCommentByArticleService(article_id, username, body) {
   });
 }
 
+function updateVoteByArticleService(article_id, inc_votes) {
+  if (inc_votes === undefined) {
+    return new Promise((resolve, reject) => {
+      reject(new BadRequestError("Inc_votes Required!"));
+    });
+  }
+  if (typeof inc_votes !== "number") {
+    return new Promise((resolve, reject) => {
+      reject(new BadRequestError("Inc_votes Not Valid!"));
+    });
+  }
+
+  return updateVoteByArticle(article_id, inc_votes).then(
+    ({ article, rowCount }) => {
+      if (rowCount === 0) {
+        throw new NotFoundError("Article Not Found!");
+      }
+
+      return article;
+    },
+  );
+}
+
 module.exports = {
   fetchArticlesService,
   fetchArticleByIdService,
   fetchCommentsByArticleService,
   addCommentByArticleService,
+  updateVoteByArticleService,
 };

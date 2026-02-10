@@ -3,6 +3,7 @@ const {
   fetchArticleByIdService,
   fetchCommentsByArticleService,
   addCommentByArticleService,
+  updateVoteByArticleService,
 } = require("../services/articles.services.js");
 
 function getAllArticles(req, res, next) {
@@ -41,9 +42,21 @@ function postCommentByArticle(req, res, next) {
     .catch(next);
 }
 
+function patchVoteByArticle(req, res, next) {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+
+  return updateVoteByArticleService(article_id, inc_votes)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
+}
+
 module.exports = {
   getAllArticles,
   getArticleById,
   getCommentsByArticle,
   postCommentByArticle,
+  patchVoteByArticle,
 };

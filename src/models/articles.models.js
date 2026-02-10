@@ -65,9 +65,24 @@ function insertCommentByArticle(article_id, username, body) {
     .then(({ rows }) => rows[0]);
 }
 
+function updateVoteByArticle(article_id, inc_votes) {
+  return db
+    .query(
+      `UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *;`,
+      [inc_votes, article_id],
+    )
+    .then(({ rows, rowCount }) => {
+      return { article: rows[0], rowCount };
+    });
+}
+
 module.exports = {
   selectAllArticles,
   selectArticleById,
   selectCommentsByArticle,
   insertCommentByArticle,
+  updateVoteByArticle,
 };
