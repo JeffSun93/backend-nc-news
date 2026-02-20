@@ -8,6 +8,7 @@ jest.mock("../../src/controllers/articles.controllers.js", () => ({
   getArticleById: jest.fn(),
   getCommentsByArticle: jest.fn(),
   postCommentByArticle: jest.fn(),
+  patchVoteByArticle: jest.fn(),
 }));
 
 describe("Articles router test", () => {

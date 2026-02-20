@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NC News API</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="#header">Home</a></li>
+        <li><a href="#endpoints">Endpoints</a></li>
+        <li><a href="#footer">About</a></li>
+      </ul>
+    </nav>
+
+    <header id="header">
+      <h1>NC News API</h1>
+      <p class="header-text">
+        An API that provides access to NC News articles, topics, users and
+        comments.
+      </p>
+    </header>
+    <main id="endpoints">
+      <h2>Available Endpoints:</h2>
+      <ul>
+        <!-- 1. GET /api/topics -->
+        <li class="endpoint-card">
+          <h3><a href="/api/topics">GET /api/topics</a></h3>
+          <p>Retrieve a list of all topics.</p>
+        </li>
+
+        <!-- 2. GET /api/articles/:article_id -->
+
+        <li class="endpoint-card">
+          <h3>
+            <a href="/api/articles/:article_id"
+              >GET /api/articles/:article_id</a
+            >
+          </h3>
+          <p>Retrieve details of a specific article by its ID.</p>
+        </li>
+
+        <!-- 3. GET /api/articles/:article_id/comments -->
+
+        <li class="endpoint-card">
+          <h3>
+            <a href="/api/articles/:article_id/comments"
+              >GET /api/articles/:article_id/comments</a
+            >
+          </h3>
+          <p>Retrieve all comments for a specific article.</p>
+        </li>
+
+        <!-- 4. GET /api/comments/:comment_id -->
+        <li class="endpoint-card">
+          <h3>
+            <a href="/api/comments/:comment_id"
+              >GET /api/comments/:comment_id</a
+            >
+          </h3>
+          <p>Retrieve details of a specific comment.</p>
+        </li>
+
+        <!-- 5. POST /api/comments -->
+        <li class="endpoint-card">
+          <h3><a href="/api/comments">POST /api/comments</a></h3>
+          <p>
+            Add a new comment to an article. Requires a request body with
+            'username' and 'body'.
+          </p>
+        </li>
+
+        <!-- 6. GET /api/articles -->
+        <li class="endpoint-card">
+          <h3><a href="/api/articles">GET /api/articles</a></h3>
+          <p>
+            Retrieve a list of all articles. Optional query parameters: topic,
+            sort_by, order.
+          </p>
+        </li>
+
+        <!-- 7. GET /api/users -->
+        <li class="endpoint-card">
+          <h3><a href="/api/users">GET /api/users</a></h3>
+          <p>Retrieve a list of all users.</p>
+        </li>
+
+        <!-- 8. GET /api/topics -->
+        <li class="endpoint-card">
+          <h3><a href="/api/topics">GET /api/topics</a></h3>
+          <p>Retrieve all topics available in the database.</p>
+        </li>
+      </ul>
+    </main>
+  </body>
+  <footer id="footer">
+    <p>
+      Created by
+      <a href="https://github.com/JeffSun93" target="_blank">Jeff</a>
+    </p>
+  </footer>
+</html>

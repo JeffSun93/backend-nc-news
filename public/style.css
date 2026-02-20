@@ -1,0 +1,70 @@
+/* 全局样式 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* header 样式 */
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* main 容器 */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem; /* 可选，给 main 内边距 */
+}
+
+/* endpoint-card 样式 */
+.endpoint-card {
+  background-color: #fffbe6;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+footer a {
+  color: #ffd700; /* 黄金色链接 */
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+
+nav {
+  background-color: #444;
+  padding: 0.5rem;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+nav a {
+  color: #fff;
+  text-decoration: none;
+}
+nav a:hover {
+  text-decoration: underline;
+}

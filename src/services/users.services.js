@@ -1,4 +1,4 @@
-const selectAllUsers = require("../models/users.models.js");
+const { selectAllUsers } = require("../models/users.models.js");
 
 function fetchUsersService() {
   return selectAllUsers();
