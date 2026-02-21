@@ -7,8 +7,24 @@ const {
   updateVoteByArticle,
 } = require("../models/articles.models.js");
 
-function fetchArticlesService() {
-  return selectAllArticles();
+async function fetchArticlesService(sort_by, order) {
+  const validSortBy = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  const validOrder = ["ASC", "DESC"];
+  if (!validSortBy.includes(sort_by)) {
+    throw new BadRequestError("Sort_by is not valid!");
+  }
+  if (!validOrder.includes(order)) {
+    throw new BadRequestError("Order is not valid!");
+  }
+  return selectAllArticles(sort_by, order);
 }
 
 function fetchArticleByIdService(article_id) {

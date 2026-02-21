@@ -1,6 +1,6 @@
 const db = require("../../db/connection.js");
 
-function selectAllArticles() {
+function selectAllArticles(sort_by, order) {
   return db
     .query(
       `SELECT articles.author,
@@ -14,7 +14,7 @@ function selectAllArticles() {
     FROM articles
     LEFT JOIN comments on articles.article_id = comments.article_id
     GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`,
+    ORDER BY ${sort_by} ${order};`,
     )
     .then(({ rows }) => rows);
 }

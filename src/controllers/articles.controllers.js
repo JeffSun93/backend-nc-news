@@ -7,7 +7,8 @@ const {
 } = require("../services/articles.services.js");
 
 function getAllArticles(req, res, next) {
-  return fetchArticlesService()
+  const { sort_by = "created_at", order = "DESC" } = req.query;
+  return fetchArticlesService(sort_by, order)
     .then((articles) => {
       res.status(200).send({ articles });
     })

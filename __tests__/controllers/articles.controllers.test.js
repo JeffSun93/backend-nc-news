@@ -13,14 +13,20 @@ describe("getAllArticles Controller", () => {
   let req, res, next;
 
   beforeEach(() => {
-    req = {};
+    req = { query: {} };
     res = { status: jest.fn().mockReturnThis(), send: jest.fn() };
     next = jest.fn();
     jest.clearAllMocks();
   });
 
   it("should send status 200 and articles on sucess", async () => {
-    const mockArticles = [{ article_id: "articleId", title: "articleTitle" }];
+    const mockArticles = [
+      {
+        article_id: "articleId",
+        title: "articleTitle",
+        created_at: "10-09-2025",
+      },
+    ];
     fetchArticlesService.mockResolvedValue(mockArticles);
 
     await getAllArticles(req, res, next);

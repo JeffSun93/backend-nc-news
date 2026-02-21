@@ -5,7 +5,7 @@ afterAll(() => db.end());
 
 describe("selectAllArticles Model", () => {
   it("should return an array of all articles objects", () => {
-    return selectAllArticles().then((articles) => {
+    return selectAllArticles("created_at", "DESC").then((articles) => {
       expect(Array.isArray(articles)).toBe(true);
       expect(articles.length).toBeGreaterThan(0);
       articles.forEach((article) => {
@@ -24,14 +24,14 @@ describe("selectAllArticles Model", () => {
   });
 
   it("should be sorted by date in descending order", () => {
-    return selectAllArticles().then((articles) => {
+    return selectAllArticles("created_at", "DESC").then((articles) => {
       expect(articles).toBeSortedBy("created_at", { descending: true });
     });
   });
 
   //how to test count?
   it("should be grouped by article_id and count the comments", () => {
-    return selectAllArticles().then((articles) => {
+    return selectAllArticles("created_at", "DESC").then((articles) => {
       console.log(articles);
     });
   });
