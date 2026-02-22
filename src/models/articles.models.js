@@ -9,9 +9,9 @@ function selectAllArticles(sort_by, order, topic) {
        articles.created_at, 
        articles.votes, 
        articles.article_img_url, 
-       COUNT(comments.comment_id) AS comment_count 
+       COUNT(comments.comment_id)::INT AS comment_count 
        FROM articles
-       LEFT JOIN comments on articles.article_id = comments.article_id`;
+       LEFT JOIN comments ON articles.article_id = comments.article_id`;
   if (topic) {
     queryStr += ` WHERE topic = $1`;
     queryValues.push(topic);
@@ -24,16 +24,19 @@ function selectAllArticles(sort_by, order, topic) {
 function selectArticleById(article_id) {
   return db
     .query(
-      `SELECT author,
-       title,
-       article_id,
-       body, 
-       topic, 
-       created_at, 
-       votes, 
-       article_img_url
+      `SELECT articles.author,
+       articles.title,
+       articles.article_id,
+       articles.body, 
+       articles.topic, 
+       articles.created_at, 
+       articles.votes, 
+       articles.article_img_url,
+       COUNT(comments.comment_id)::INT AS comment_count
        FROM articles
-       WHERE article_id = $1; 
+       LEFT JOIN comments ON articles.article_id = comments.article_id
+       WHERE articles.article_id = $1
+       GROUP BY articles.article_id;
     `,
       [article_id],
     )
