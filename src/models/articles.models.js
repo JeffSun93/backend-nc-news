@@ -1,9 +1,8 @@
 const db = require("../../db/connection.js");
 
-function selectAllArticles(sort_by, order) {
-  return db
-    .query(
-      `SELECT articles.author,
+function selectAllArticles(sort_by, order, topic) {
+  const queryValues = [];
+  let queryStr = `SELECT articles.author,
        articles.title,
        articles.article_id, 
        articles.topic, 
@@ -11,12 +10,15 @@ function selectAllArticles(sort_by, order) {
        articles.votes, 
        articles.article_img_url, 
        COUNT(comments.comment_id) AS comment_count 
-    FROM articles
-    LEFT JOIN comments on articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY ${sort_by} ${order};`,
-    )
-    .then(({ rows }) => rows);
+       FROM articles
+       LEFT JOIN comments on articles.article_id = comments.article_id`;
+  if (topic) {
+    queryStr += ` WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+  queryStr += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`;
+
+  return db.query(queryStr, queryValues).then(({ rows }) => rows);
 }
 
 function selectArticleById(article_id) {
@@ -79,10 +81,19 @@ function updateVoteByArticle(article_id, inc_votes) {
     });
 }
 
+function checkTopicExist(topic) {
+  return db
+    .query(`SELECT * FROM topics WHERE slug = $1;`, [topic])
+    .then(({ rows }) => {
+      return rows.length > 0;
+    });
+}
+
 module.exports = {
   selectAllArticles,
   selectArticleById,
   selectCommentsByArticle,
   insertCommentByArticle,
   updateVoteByArticle,
+  checkTopicExist,
 };

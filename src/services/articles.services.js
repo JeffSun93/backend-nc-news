@@ -5,9 +5,10 @@ const {
   selectCommentsByArticle,
   insertCommentByArticle,
   updateVoteByArticle,
+  checkTopicExist,
 } = require("../models/articles.models.js");
 
-async function fetchArticlesService(sort_by, order) {
+async function fetchArticlesService(sort_by, order, topic) {
   const validSortBy = [
     "author",
     "title",
@@ -18,13 +19,20 @@ async function fetchArticlesService(sort_by, order) {
     "comment_count",
   ];
   const validOrder = ["ASC", "DESC"];
+
+  if (topic) {
+    const isTopicExist = await checkTopicExist(topic);
+    if (!isTopicExist) {
+      throw new NotFoundError("Topic not found!");
+    }
+  }
   if (!validSortBy.includes(sort_by)) {
     throw new BadRequestError("Sort_by is not valid!");
   }
   if (!validOrder.includes(order)) {
     throw new BadRequestError("Order is not valid!");
   }
-  return selectAllArticles(sort_by, order);
+  return selectAllArticles(sort_by, order, topic);
 }
 
 function fetchArticleByIdService(article_id) {
