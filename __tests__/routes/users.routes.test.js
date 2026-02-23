@@ -5,6 +5,7 @@ const usersController = require("../../src/controllers/users.controllers.js");
 
 jest.mock("../../src/controllers/users.controllers.js", () => ({
   getAllUsers: jest.fn(),
+  getUserByUsername: jest.fn(),
 }));
 
 describe("Users router test", () => {
