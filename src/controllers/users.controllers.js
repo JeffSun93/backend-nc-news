@@ -2,22 +2,25 @@ const {
   fetchUsersService,
   fetchUserByUsername,
 } = require("../services/users.services.js");
+const { HTTP_STATUS } = require("../constants/index.js");
 
-function getAllUsers(req, res, next) {
-  return fetchUsersService()
-    .then((users) => {
-      res.status(200).send({ users });
-    })
-    .catch(next);
+async function getAllUsers(req, res, next) {
+  try {
+    const users = await fetchUsersService();
+    res.status(HTTP_STATUS.OK).send({ users });
+  } catch (err) {
+    next(err);
+  }
 }
 
-function getUserByUsername(req, res, next) {
-  const { username } = req.params;
-  return fetchUserByUsername(username)
-    .then((user) => {
-      res.status(200).send({ user });
-    })
-    .catch(next);
+async function getUserByUsername(req, res, next) {
+  try {
+    const { username } = req.params;
+    const user = await fetchUserByUsername(username);
+    res.status(HTTP_STATUS.OK).send({ user });
+  } catch (err) {
+    next(err);
+  }
 }
 
 module.exports = { getAllUsers, getUserByUsername };

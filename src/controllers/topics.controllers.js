@@ -1,11 +1,13 @@
 const { fetchTopicsService } = require("../services/topics.services.js");
+const { HTTP_STATUS } = require("../constants/index.js");
 
-function getAllTopics(req, res, next) {
-  return fetchTopicsService()
-    .then((topics) => {
-      res.status(200).send({ topics });
-    })
-    .catch(next);
+async function getAllTopics(req, res, next) {
+  try {
+    const topics = await fetchTopicsService();
+    res.status(HTTP_STATUS.OK).send({ topics });
+  } catch (err) {
+    next(err);
+  }
 }
 
 module.exports = { getAllTopics };

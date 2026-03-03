@@ -1,6 +1,7 @@
 const {
   getAllArticles,
 } = require("../../src/controllers/articles.controllers.js");
+const { HTTP_STATUS } = require("../../src/constants/index.js");
 const {
   fetchArticlesService,
 } = require("../../src/services/articles.services.js");
@@ -31,7 +32,7 @@ describe("getAllArticles Controller", () => {
 
     await getAllArticles(req, res, next);
 
-    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
     expect(res.send).toHaveBeenCalledWith({ articles: mockArticles });
     expect(next).not.toHaveBeenCalled();
   });
