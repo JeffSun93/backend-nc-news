@@ -3,102 +3,306 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NC News API</title>
+    <title>NC News API Docs</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <nav>
+    <div class="page-bg"></div>
+
+    <nav class="top-nav">
+      <a class="brand" href="#overview">NC News API</a>
       <ul>
-        <li><a href="#header">Home</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
         <li><a href="#endpoints">Endpoints</a></li>
-        <li><a href="#footer">About</a></li>
+        <li><a href="#errors">Errors</a></li>
       </ul>
     </nav>
 
-    <header id="header">
-      <h1>NC News API</h1>
-      <p class="header-text">
-        An API that provides access to NC News articles, topics, users and
-        comments.
+    <header id="overview" class="hero">
+      <p class="eyebrow">REST API Documentation</p>
+      <h1>NC News Backend API</h1>
+      <p class="hero-text">
+        A Node.js + Express + PostgreSQL API for topics, articles, comments and
+        users. This page documents the routes currently implemented in this
+        project.
       </p>
+      <div class="meta-grid">
+        <article>
+          <h2>Base URL</h2>
+          <pre><code><a href="https://jeff-nc-news.onrender.com" target="_blank" rel="noreferrer">https://jeff-nc-news.onrender.com</a></code></pre>
+        </article>
+        <article>
+          <h2>Local URL</h2>
+          <pre><code><a href="http://localhost:9090" target="_blank" rel="noreferrer">http://localhost:9090</a></code></pre>
+        </article>
+        <article>
+          <h2>Content Type</h2>
+          <pre><code>application/json</code></pre>
+        </article>
+      </div>
     </header>
-    <main id="endpoints">
-      <h2>Available Endpoints:</h2>
-      <ul>
-        <!-- 1. GET /api/topics -->
-        <li class="endpoint-card">
-          <h3><a href="/api/topics">GET /api/topics</a></h3>
-          <p>Retrieve a list of all topics.</p>
-        </li>
 
-        <!-- 2. GET /api/articles/:article_id -->
+    <main>
+      <section id="quickstart" class="doc-section">
+        <h2>Quick Start</h2>
+        <div class="callout">
+          <p>List all articles sorted by newest first:</p>
+          <pre><code>curl "http://localhost:9090/api/articles?sort_by=created_at&amp;order=DESC"</code></pre>
+        </div>
+        <div class="callout">
+          <p>Add a comment to an article:</p>
+          <pre><code>curl -X POST "http://localhost:9090/api/articles/1/comments" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"butter_bridge","body":"Great read!"}'</code></pre>
+        </div>
+      </section>
 
-        <li class="endpoint-card">
-          <h3>
-            <a href="/api/articles/:article_id"
-              >GET /api/articles/:article_id</a
-            >
-          </h3>
-          <p>Retrieve details of a specific article by its ID.</p>
-        </li>
+      <section id="endpoints" class="doc-section">
+        <h2>Endpoints</h2>
 
-        <!-- 3. GET /api/articles/:article_id/comments -->
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <a href="/api/topics">/api/topics</a>
+          </div>
+          <p>Retrieve all topics.</p>
+          <pre><code>200 OK
+{
+  "topics": [
+    {
+      "slug": "coding",
+      "description": "Code is love, code is life"
+    }
+  ]
+}</code></pre>
+        </article>
 
-        <li class="endpoint-card">
-          <h3>
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <a href="/api/articles">/api/articles</a>
+          </div>
+          <p>Retrieve all articles. Supports filtering and sorting.</p>
+          <ul class="param-list">
+            <li><strong>topic</strong>: filter by topic slug</li>
+            <li>
+              <strong>sort_by</strong>: author, title, article_id, topic,
+              created_at, votes, comment_count
+            </li>
+            <li><strong>order</strong>: ASC or DESC</li>
+          </ul>
+          <pre><code>200 OK
+{
+  "articles": [
+    {
+      "article_id": 1,
+      "title": "Living in the shadow of a great man",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "created_at": "2020-07-09T20:11:00.000Z",
+      "votes": 100,
+      "comment_count": 11
+    }
+  ]
+}</code></pre>
+        </article>
+
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <a href="/api/articles/:article_id">/api/articles/:article_id</a>
+          </div>
+          <p>Retrieve one article by ID.</p>
+          <ul class="param-list">
+            <li><strong>article_id</strong> (path): positive integer</li>
+          </ul>
+          <pre><code>200 OK
+{
+  "article": {
+    "article_id": 1,
+    "title": "Living in the shadow of a great man",
+    "topic": "mitch",
+    "author": "butter_bridge",
+    "body": "I find this existence challenging",
+    "created_at": "2020-07-09T20:11:00.000Z",
+    "votes": 100,
+    "article_img_url": "https://images.pexels.com/...",
+    "comment_count": 11
+  }
+}</code></pre>
+        </article>
+
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method patch">PATCH</span>
+            <a href="/api/articles/:article_id">/api/articles/:article_id</a>
+          </div>
+          <p>Update article votes.</p>
+          <ul class="param-list">
+            <li><strong>article_id</strong> (path): positive integer</li>
+            <li><strong>inc_votes</strong> (body): number, required</li>
+          </ul>
+          <pre><code>Request Body
+{
+  "inc_votes": 1
+}
+
+200 OK
+{
+  "article": {
+    "article_id": 1,
+    "votes": 101
+  }
+}</code></pre>
+        </article>
+
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
             <a href="/api/articles/:article_id/comments"
-              >GET /api/articles/:article_id/comments</a
+              >/api/articles/:article_id/comments</a
             >
-          </h3>
+          </div>
           <p>Retrieve all comments for a specific article.</p>
-        </li>
+          <ul class="param-list">
+            <li><strong>article_id</strong> (path): positive integer</li>
+          </ul>
+          <pre><code>200 OK
+{
+  "comments": [
+    {
+      "comment_id": 1,
+      "article_id": 1,
+      "author": "butter_bridge",
+      "body": "Oh, I've got compassion running out of my nose, pal!",
+      "votes": 16,
+      "created_at": "2020-04-06T12:17:00.000Z"
+    }
+  ]
+}</code></pre>
+        </article>
 
-        <!-- 4. GET /api/comments/:comment_id -->
-        <li class="endpoint-card">
-          <h3>
-            <a href="/api/comments/:comment_id"
-              >GET /api/comments/:comment_id</a
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <a href="/api/articles/:article_id/comments"
+              >/api/articles/:article_id/comments</a
             >
-          </h3>
-          <p>Retrieve details of a specific comment.</p>
-        </li>
+          </div>
+          <p>Add a comment to an article.</p>
+          <ul class="param-list">
+            <li><strong>article_id</strong> (path): positive integer</li>
+            <li><strong>username</strong> (body): string, required</li>
+            <li><strong>body</strong> (body): string, required</li>
+          </ul>
+          <pre><code>Request Body
+{
+  "username": "butter_bridge",
+  "body": "Great article!"
+}
 
-        <!-- 5. POST /api/comments -->
-        <li class="endpoint-card">
-          <h3><a href="/api/comments">POST /api/comments</a></h3>
-          <p>
-            Add a new comment to an article. Requires a request body with
-            'username' and 'body'.
-          </p>
-        </li>
+201 Created
+{
+  "comment": {
+    "comment_id": 19,
+    "article_id": 1,
+    "author": "butter_bridge",
+    "body": "Great article!",
+    "votes": 0,
+    "created_at": "2026-03-26T08:00:00.000Z"
+  }
+}</code></pre>
+        </article>
 
-        <!-- 6. GET /api/articles -->
-        <li class="endpoint-card">
-          <h3><a href="/api/articles">GET /api/articles</a></h3>
-          <p>
-            Retrieve a list of all articles. Optional query parameters: topic,
-            sort_by, order.
-          </p>
-        </li>
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method delete">DELETE</span>
+            <a href="/api/comments/:comment_id">/api/comments/:comment_id</a>
+          </div>
+          <p>Delete a comment by ID.</p>
+          <ul class="param-list">
+            <li><strong>comment_id</strong> (path): positive integer</li>
+          </ul>
+          <pre><code>204 No Content</code></pre>
+        </article>
 
-        <!-- 7. GET /api/users -->
-        <li class="endpoint-card">
-          <h3><a href="/api/users">GET /api/users</a></h3>
-          <p>Retrieve a list of all users.</p>
-        </li>
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <a href="/api/users">/api/users</a>
+          </div>
+          <p>Retrieve all users.</p>
+          <pre><code>200 OK
+{
+  "users": [
+    {
+      "username": "butter_bridge",
+      "name": "jonny",
+      "avatar_url": "https://www.healthytherapies.com/..."
+    }
+  ]
+}</code></pre>
+        </article>
 
-        <!-- 8. GET /api/topics -->
-        <li class="endpoint-card">
-          <h3><a href="/api/topics">GET /api/topics</a></h3>
-          <p>Retrieve all topics available in the database.</p>
-        </li>
-      </ul>
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <a href="/api/users/:username">/api/users/:username</a>
+          </div>
+          <p>Retrieve one user by username.</p>
+          <ul class="param-list">
+            <li><strong>username</strong> (path): string</li>
+          </ul>
+          <pre><code>200 OK
+{
+  "user": {
+    "username": "butter_bridge",
+    "name": "jonny",
+    "avatar_url": "https://www.healthytherapies.com/..."
+  }
+}</code></pre>
+        </article>
+      </section>
+
+      <section id="errors" class="doc-section">
+        <h2>Error Responses</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>When It Happens</th>
+              <th>Message Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>400</td>
+              <td>Invalid id, invalid query/body fields, invalid JSON</td>
+              <td>{ "msg": "inc_votes is required" }</td>
+            </tr>
+            <tr>
+              <td>404</td>
+              <td>Resource not found or unknown route</td>
+              <td>{ "msg": "Article not found" }</td>
+            </tr>
+            <tr>
+              <td>500</td>
+              <td>Unexpected server-side failure</td>
+              <td>{ "msg": "Internal Server Error" }</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
+
+    <footer id="footer">
+      <p>
+        Built by
+        <a href="https://github.com/JeffSun93" target="_blank" rel="noreferrer"
+          >Jeff Sun</a
+        >
+      </p>
+    </footer>
   </body>
-  <footer id="footer">
-    <p>
-      Created by
-      <a href="https://github.com/JeffSun93" target="_blank">Jeff</a>
-    </p>
-  </footer>
 </html>
