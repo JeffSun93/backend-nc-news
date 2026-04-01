@@ -1,4 +1,33 @@
-module.exports = [
+const articles = require("./articles");
+
+const MINUTE = 60 * 1000;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+const YEAR = 365 * DAY;
+const MIN_GAP = 2 * MINUTE;
+
+const gradientOffsetsMs = [
+  2 * MINUTE,
+  8 * MINUTE,
+  35 * MINUTE,
+  2 * HOUR,
+  6 * HOUR,
+  1 * DAY,
+  2 * DAY,
+  3 * DAY,
+  5 * DAY,
+  6 * DAY,
+  7 * DAY,
+];
+
+const articleCreatedAtByTitle = new Map(
+  articles.map((article) => [
+    article.title,
+    new Date(article.created_at).getTime(),
+  ]),
+);
+
+const comments = [
   {
     article_title:
       "The People Tracking Every Touch, Pass And Tackle in the World Cup",
@@ -2156,3 +2185,38 @@ module.exports = [
     created_at: new Date(1580527320000),
   },
 ];
+
+module.exports = comments.map((comment, index) => {
+  const now = Date.now();
+  const latestAllowed = now - 30 * 1000;
+  const articleCreatedAt = articleCreatedAtByTitle.get(comment.article_title);
+  const safeArticleCreatedAt = Number.isFinite(articleCreatedAt)
+    ? articleCreatedAt
+    : Date.now() - 5 * YEAR;
+  const boundedArticleCreatedAt = Math.min(
+    safeArticleCreatedAt,
+    latestAllowed - MIN_GAP,
+  );
+
+  // Keep a clear gradient and avoid exact timestamp collisions.
+  const offset =
+    gradientOffsetsMs[index % gradientOffsetsMs.length] +
+    Math.floor(index / gradientOffsetsMs.length) * 3 * MINUTE;
+
+  let createdAtMs = boundedArticleCreatedAt + offset;
+
+  // Never generate timestamps in the future.
+  if (createdAtMs > latestAllowed) {
+    createdAtMs = latestAllowed;
+  }
+
+  // Always keep comment time after its article.
+  if (createdAtMs <= boundedArticleCreatedAt) {
+    createdAtMs = boundedArticleCreatedAt + MIN_GAP + (index % 5) * 10 * 1000;
+  }
+
+  return {
+    ...comment,
+    created_at: new Date(createdAtMs),
+  };
+});

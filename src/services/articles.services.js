@@ -13,8 +13,15 @@ const {
   validateNumber,
   validateIncludes,
 } = require("../utils/validators.js");
-const { handleDatabaseError, isDatabaseError } = require("../errors/dbErrorHandler.js");
-const { ARTICLE_SORT_COLUMNS, ARTICLE_SORT_ORDER, ERROR_MSG } = require("../constants/index.js");
+const {
+  handleDatabaseError,
+  isDatabaseError,
+} = require("../errors/dbErrorHandler.js");
+const {
+  ARTICLE_SORT_COLUMNS,
+  ARTICLE_SORT_ORDER,
+  ERROR_MSG,
+} = require("../constants/index.js");
 
 async function fetchArticlesService(sort_by, order, topic) {
   validateIncludes(sort_by, ARTICLE_SORT_COLUMNS, "sort_by");
@@ -87,16 +94,23 @@ async function updateVoteByArticleService(article_id, inc_votes) {
 
   validateNumber(inc_votes, "inc_votes");
 
-  const { article, rowCount } = await updateVoteByArticle(
-    article_id,
-    inc_votes,
-  );
+  try {
+    const { article, rowCount } = await updateVoteByArticle(
+      article_id,
+      inc_votes,
+    );
 
-  if (rowCount === 0) {
-    throw new NotFoundError(ERROR_MSG.ARTICLE_NOT_FOUND);
+    if (rowCount === 0) {
+      throw new NotFoundError(ERROR_MSG.ARTICLE_NOT_FOUND);
+    }
+
+    return article;
+  } catch (error) {
+    if (isDatabaseError(error)) {
+      throw handleDatabaseError(error);
+    }
+    throw error;
   }
-
-  return article;
 }
 
 module.exports = {
