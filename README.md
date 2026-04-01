@@ -4,7 +4,7 @@
 
 ## Hosted Version
 
-The live API can be accessed at **https://jeff-nc-news.onrender.com/** .
+The live API can be accessed at **https://jeff-nc-news.onrender.com/**.
 
 ## Project Summary
 
@@ -45,21 +45,25 @@ Create two files in the project root at the same level as `package.json`:
 - `.env.development`
 - `.env.test`
 
-Each file must contain the following variables:
+Each file only needs one variable:
+
+`.env.development`:
 
 ```env
-PGHOST=localhost
-PGUSER=<your_pg_user>
-PGPASSWORD=<your_pg_password>
-PGDATABASE=<appropriate_database_name>
-PGPORT=5432
+PGDATABASE=nc_news
 ```
 
-For the development file use `nc_news` and for the test file use `nc_news_test`.
+`.env.test`:
+
+```env
+PGDATABASE=nc_news_test
+```
+
+If your PostgreSQL setup requires a password or non-default user, you may also add `PGUSER` and `PGPASSWORD`.
 
 > These files are gitignored and should **never** be committed.
 
-### 5. Seed the databases
+### 5. Seed the database
 
 The repository already includes seeding scripts. Run:
 
@@ -67,13 +71,15 @@ The repository already includes seeding scripts. Run:
 npm run seed
 ```
 
-This will populate both the development and test databases with the sample data used throughout the project.
+This seeds the **development** database using `.env.development`.
+
+> The test database is automatically re-seeded by Jest before each test run — no manual step needed.
 
 ### 6. Run the server
 
 ```bash
 npm start          # starts the API on port 9090 by default
-npm run dev        # start with nodemon for development
+npm run dev-start  # start with nodemon for development
 ```
 
 ### 7. Run tests
@@ -93,8 +99,9 @@ All Jest/Supertest suites are located under the `__tests__` directory and exerci
 | GET    | `/api/articles/:article_id`          | Retrieve a single article                |
 | GET    | `/api/articles/:article_id/comments` | Comments for an article                  |
 | POST   | `/api/articles/:article_id/comments` | Add a comment to an article              |
-| PATCH  | `/api/articles/:article_id`          | Update an article's votes/title          |
+| PATCH  | `/api/articles/:article_id`          | Update an article's votes                |
 | DELETE | `/api/comments/:comment_id`          | Remove a comment                         |
+| PATCH  | `/api/comments/:comment_id`          | Update a comment's votes                 |
 | GET    | `/api/users`                         | List all users                           |
 | GET    | `/api/users/:username`               | Retrieve a single user                   |
 
@@ -107,7 +114,8 @@ All Jest/Supertest suites are located under the `__tests__` directory and exerci
 
 ## Testing
 
-This project uses **Jest** and **Supertest**. Tests are configured to run against the `nc_news_test` database. Make sure to seed the test database before running the suite.
+This project uses **Jest** and **Supertest**. Tests run against the `nc_news_test` database.
+Jest automatically re-seeds the test database before each run — just ensure the database exists (see step 3).
 
 ## Project Structure
 
@@ -118,6 +126,8 @@ src/
   models/           # SQL query helpers
   routes/           # Router definitions
   errors/           # Custom error classes and handlers
+  constants/        # Shared constants
+  utils/            # Utility helpers
   app.js            # Express app setup
 
 __tests__/          # Jest test files mirroring src structure
