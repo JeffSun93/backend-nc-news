@@ -30,4 +30,17 @@ describe("Users router test", () => {
       expect(usersController.getAllUsers).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe("GET /api/users/:username", () => {
+    it("should invoke getUserByUsername", async () => {
+      usersController.getUserByUsername.mockImplementation((req, res) => {
+        res.status(200).send({ user: { username: "butter_bridge" } });
+      });
+
+      const response = await request(app).get("/api/users/butter_bridge");
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("user");
+      expect(usersController.getUserByUsername).toHaveBeenCalledTimes(1);
+    });
+  });
 });
