@@ -4,13 +4,42 @@
 
 ## Hosted Version
 
-The live API can be accessed at **https://jeff-nc-news.onrender.com/**.
+The API is deployed on **Render** and can be accessed at:
+
+**[https://jeff-nc-news.onrender.com/api](https://jeff-nc-news.onrender.com/api)**
+
+All endpoints follow RESTful conventions and return JSON responses.
+
+> This project uses Render's free tier. The server may take up to 60 seconds to respond on the first request after a period of inactivity.
 
 ## Project Summary
 
 This repository contains the backend portion of the **NC News** project. It's a RESTful API built with **Node.js**, **Express**, and **node-postgres** that provides programmatic access to a seeded PostgreSQL database. The API exposes endpoints for topics, articles, comments, and users—mimicking the functionality of a real-world news aggregation service.
 
 A simple static front end (found under `public/`) provides documentation of the available routes.
+
+## Architecture
+
+This project follows an **MVC-inspired layered architecture**:
+
+- **Routes** — define URL patterns and delegate to controllers
+- **Controllers** — parse the request and send the response
+- **Services** — validate inputs and contain business logic
+- **Models** — execute parameterized SQL queries against the database
+
+This separation keeps each layer focused and independently testable.
+
+## Testing
+
+This project uses **Jest** and **Supertest**. Tests run against the `nc_news_test` database.
+Jest automatically re-seeds the test database before each run — just ensure the database exists (see step 3).
+
+The test suite covers two levels:
+
+- **Unit tests** — controllers, services, models, and utilities are tested in isolation
+- **Integration tests** — full request/response cycle tested against a live test database for each endpoint
+
+A **Husky** pre-commit hook is configured to run `npm test` automatically before every commit. If any test fails, the commit will be blocked.
 
 ## Getting Started
 
@@ -115,29 +144,6 @@ All Jest/Supertest suites are located under the `__tests__` directory and exerci
 
 - **Node.js**: version **16.x** or later
 - **PostgreSQL**: version **14.x** or later
-
-## Architecture
-
-This project follows an **MVC-inspired layered architecture**:
-
-- **Routes** — define URL patterns and delegate to controllers
-- **Controllers** — parse the request and send the response
-- **Services** — validate inputs and contain business logic
-- **Models** — execute parameterized SQL queries against the database
-
-This separation keeps each layer focused and independently testable.
-
-## Testing
-
-This project uses **Jest** and **Supertest**. Tests run against the `nc_news_test` database.
-Jest automatically re-seeds the test database before each run — just ensure the database exists (see step 3).
-
-The test suite covers two levels:
-
-- **Unit tests** — controllers, services, models, and utilities are tested in isolation
-- **Integration tests** — full request/response cycle tested against a live test database for each endpoint
-
-A **Husky** pre-commit hook is configured to run `npm test` automatically before every commit. If any test fails, the commit will be blocked.
 
 ## Project Structure
 
