@@ -95,7 +95,7 @@ All Jest/Supertest suites are located under the `__tests__` directory and exerci
 | Method | Path                                 | Description                              |
 | ------ | ------------------------------------ | ---------------------------------------- |
 | GET    | `/api/topics`                        | List all topics                          |
-| GET    | `/api/articles`                      | List articles (with filtering & sorting) |
+| GET    | `/api/articles`                      | List articles — query params: `topic`, `sort_by`, `order` (`ASC`/`DESC`) |
 | GET    | `/api/articles/:article_id`          | Retrieve a single article                |
 | GET    | `/api/articles/:article_id/comments` | Comments for an article                  |
 | POST   | `/api/articles/:article_id/comments` | Add a comment to an article              |

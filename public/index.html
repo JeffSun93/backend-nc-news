@@ -92,7 +92,7 @@
               <strong>sort_by</strong>: author, title, article_id, topic,
               created_at, votes, comment_count
             </li>
-            <li><strong>order</strong>: ASC or DESC</li>
+            <li><strong>order</strong>: <code>ASC</code> or <code>DESC</code> (uppercase)</li>
           </ul>
           <pre><code>200 OK
 {
@@ -227,6 +227,30 @@
             <li><strong>comment_id</strong> (path): positive integer</li>
           </ul>
           <pre><code>204 No Content</code></pre>
+        </article>
+
+        <article class="endpoint-card">
+          <div class="endpoint-head">
+            <span class="method patch">PATCH</span>
+            <a href="/api/comments/:comment_id">/api/comments/:comment_id</a>
+          </div>
+          <p>Update comment votes.</p>
+          <ul class="param-list">
+            <li><strong>comment_id</strong> (path): positive integer</li>
+            <li><strong>inc_votes</strong> (body): number, required</li>
+          </ul>
+          <pre><code>Request Body
+{
+  "inc_votes": 1
+}
+
+200 OK
+{
+  "comment": {
+    "comment_id": 1,
+    "votes": 17
+  }
+}</code></pre>
         </article>
 
         <article class="endpoint-card">
